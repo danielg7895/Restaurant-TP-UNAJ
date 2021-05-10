@@ -33,10 +33,7 @@ namespace Application.Services
                 Date = DateTime.Now
             };
 
-            //_context.Comandas.Add(comanda);
-
             List<ComandaMercaderia> cms = new();
-
             mercaderias.ForEach(m =>
             {
                 ComandaMercaderia cm = new()
@@ -45,10 +42,7 @@ namespace Application.Services
                     ComandaId = comanda.Id,
                     MercaderiaId = m.Id
                 };
-
                 cms.Add(cm);
-                //_context.ComandaMercaderias.Add(cm);
-
             });
 
             comanda.ComandaMercaderias = cms;

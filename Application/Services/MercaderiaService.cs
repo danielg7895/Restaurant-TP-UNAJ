@@ -16,13 +16,11 @@ namespace Application.Services
             Console.WriteLine("Ingresa el tipo de mercaderia: ");
             Console.WriteLine(GetTiposMercaderiaAsString());
             int tipoMercaderiaId = int.Parse(Console.ReadLine());
-            using (RestaurantContext context = new()) { 
-                bool tipoMercaderiaExists = context.TipoMercaderias.Find(tipoMercaderiaId) != null;
-                if (!tipoMercaderiaExists) return "El ID del tipo de mercaderia ingresado no es valido";
-            }
+            if (TipoMercaderiaService.GetById(tipoMercaderiaId) == null) return "El ID del tipo de mercaderia ingresado no existe.";
 
             Console.WriteLine("Ingresa el precio del producto");
             int price = int.Parse(Console.ReadLine());
+            if (price < 0) return $"Precio incorrecto. El precio debe ir desde $0 hasta ${int.MaxValue} inclusive.";
 
             Console.WriteLine("Ingresa los ingredientes");
             string ingredients = Console.ReadLine();
@@ -32,6 +30,12 @@ namespace Application.Services
 
             Console.WriteLine("Ingresa la url de la imagen");
             string imageUrl = Console.ReadLine();
+
+            string[] inputs = { productName, ingredients, preparation, imageUrl };
+            if (inputs.Any(str => string.IsNullOrEmpty(str)))
+            {
+                return "El valor de ingredientes, nombre de producto, preparacion e imagen url no pueden estar vacio.";
+            }
 
             Mercaderia mercaderia = new()
             {
