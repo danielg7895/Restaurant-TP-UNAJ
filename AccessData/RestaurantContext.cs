@@ -12,10 +12,7 @@ namespace AccessData
         public DbSet<Mercaderia> Mercaderias { get; set; }
         public object TipoMercaderia { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=Restaurant;Trusted_Connection=True;MultipleActiveResultSets=true;");
-        }
+        public RestaurantContext(DbContextOptions<RestaurantContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,148 +1,55 @@
 ﻿using AccessData;
+using AccessData.Queries;
+using Domain.Commands;
+using Domain.DTOs;
 using Domain.Entities;
+using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Application.Services
 {
-    public class MercaderiaService
+    public class MercaderiaService : IMercaderiaService
     {
-        public static string AddMercaderia()
+        private readonly IGenericRepository _repository;
+        private readonly IMercaderiaQuery _query;
+
+        public MercaderiaService(IGenericRepository repository, IMercaderiaQuery query)
         {
-            Console.WriteLine("Ingresa nombre del producto a registrar.");
-            string productName = Console.ReadLine();
-
-            Console.WriteLine("Ingresa el tipo de mercaderia: ");
-            Console.WriteLine(GetTiposMercaderiaAsString());
-            int tipoMercaderiaId = int.Parse(Console.ReadLine());
-            if (TipoMercaderiaService.GetById(tipoMercaderiaId) == null) return "El ID del tipo de mercaderia ingresado no existe.";
-
-            Console.WriteLine("Ingresa el precio del producto");
-            int price = int.Parse(Console.ReadLine());
-            if (price < 0) return $"Precio incorrecto. El precio debe ir desde $0 hasta ${int.MaxValue} inclusive.";
-
-            Console.WriteLine("Ingresa los ingredientes");
-            string ingredients = Console.ReadLine();
-
-            Console.WriteLine("Ingresa la preparacion");
-            string preparation = Console.ReadLine();
-
-            Console.WriteLine("Ingresa la url de la imagen");
-            string imageUrl = Console.ReadLine();
-
-            string[] inputs = { productName, ingredients, preparation, imageUrl };
-            if (inputs.Any(str => string.IsNullOrEmpty(str)))
-            {
-                return "El valor de ingredientes, nombre de producto, preparacion e imagen url no pueden estar vacio.";
-            }
-
-            Mercaderia mercaderia = new()
-            {
-                Name = productName,
-                TipoMercaderiaId = tipoMercaderiaId,
-                Price = price,
-                Ingredients = ingredients,
-                Preparation = preparation,
-                Image = imageUrl
-            };
-            using (RestaurantContext context = new())
-            {
-                context.Mercaderias.Add(mercaderia);
-                context.SaveChanges();
-            }
-
-            return $"La mercaderia {productName} fue agregada a la base de datos correctamente.";
+            _repository = repository;
+            _query = query;
         }
 
-        public static Mercaderia GetById(int mercaderiaId)
+        public Mercaderia AddMercaderia(AddMercaderiaDTO mercaderiaDTO)
         {
-            Mercaderia mercaderia = null;
-            using (RestaurantContext context = new())
+            Mercaderia mercaderia = new()
             {
-                mercaderia = context.Mercaderias.Find(mercaderiaId);
-            }
-
-            if (mercaderia != null)
-            {
-                mercaderia.TipoMercaderia = TipoMercaderiaService.GetById(mercaderia.TipoMercaderiaId);
-            }
+                Name = mercaderiaDTO.Name,
+                Ingredients = mercaderiaDTO.Ingredients,
+                Preparation = mercaderiaDTO.Preparation,
+                TipoMercaderiaId = mercaderiaDTO.TipoMercaderiaId,
+                Price = mercaderiaDTO.Price,
+                Image = mercaderiaDTO.Image
+            };
+            _repository.Add(mercaderia);
 
             return mercaderia;
         }
 
-        public static string GetMercaderiasAsString()
+        public Mercaderia GetMercaderia(int id)
         {
-            List<Mercaderia> mercaderias;
-            using (RestaurantContext context = new())
-            {
-                mercaderias = context.Mercaderias.ToList();
-
-            }
-            if (!mercaderias.Any()) return null;
-
-            string mercs = string.Join("", mercaderias.Select(o =>
-            $"------------- ID: {o.Id} -------------\n" +
-            $"Nombre: {o.Name} \nPrecio: {o.Price} \nIngredientes: {o.Ingredients} \nPreparacion: {o.Preparation} \nImagen: {o.Image}\n" +
-            $"---------------------------------\n"
-            ));
-
-            return $"########################\nLista de mercaderias registradas: \n{mercs}########################\n";
+            return _query.GetMercaderia(id);
         }
 
-        public static List<Mercaderia> ChooseMercaderias()
+        public Mercaderia GetMercaderiaByFilter<T>(T filter, string key)
         {
-            List<Mercaderia> choosedMercaderias = new();
-
-            while (true)
-            {
-                string mercaderias = GetMercaderiasAsString();
-                if (mercaderias == null)
-                {
-                    Console.WriteLine("No hay mercaderias registradas!");
-                    break;
-                }
-                Console.WriteLine(mercaderias);
-                Console.WriteLine("Ingresa el ID de la mercaderia a agregar a la comanda.");
-                try
-                {
-                    int mercaderiaId = int.Parse(Console.ReadLine());
-                    Mercaderia choosedMercaderia;
-                    using (RestaurantContext context = new())
-                    {
-                        choosedMercaderia = context.Mercaderias.Find(mercaderiaId);
-                    }
-
-                    if (choosedMercaderia == null)
-                    {
-                        Console.WriteLine("El ID ingresado es incorrecto, no se encontro una mercaderia con ese ID.");
-                        continue;
-                    }
-
-                    choosedMercaderias.Add(choosedMercaderia);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Formato incorrecto, se aceptan solo numeros.");
-                    continue;
-                }
-
-                Console.WriteLine("Agregar otra mercaderia a la comanda? 's' para agregar, cualquier otra tecla para finalizar");
-                if (Console.ReadLine().ToLower() != "s") break;
-            }
-
-            return choosedMercaderias;
+            return _query.GetMercaderiaByFilter(filter, key);
         }
 
-        public static string GetTiposMercaderiaAsString()
+        public List<Mercaderia> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key)
         {
-            List<TipoMercaderia> tipoMercaderia;
-            using (RestaurantContext context = new()) {
-                tipoMercaderia = context.TipoMercaderias.ToList();
-            }
-
-            string tiposMercaderia = string.Join("\n", tipoMercaderia.Select(o => $"{o.Id}. {o.Description} "));
-            return tiposMercaderia;
+            return _query.GetMercaderiaByFilterList(filterTypeList, key);
         }
 
     }
