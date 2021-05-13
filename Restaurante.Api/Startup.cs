@@ -3,9 +3,14 @@ using AccessData.Commands;
 using AccessData.Queries;
 using Application.Services;
 using Domain.Commands;
+using Domain.DTOs;
 using Domain.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +36,7 @@ namespace Restaurante.Api
             string sqlConnection = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<RestaurantContext>(options => options.UseSqlServer(sqlConnection));
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
 
             services.AddTransient<Compiler, SqlServerCompiler>();
             services.AddTransient<IDbConnection>(b =>
@@ -51,22 +56,22 @@ namespace Restaurante.Api
             services.AddTransient<IComandaService, ComandaService>();
             services.AddTransient<IMercaderiaService, MercaderiaService>();
 
+            // Validators
+            services.AddTransient<IValidator<AddMercaderiaDTO>, AddMercaderiaDTOValidator>();
+            services.AddTransient<IValidator<UpdateMercaderiaDTO>, UpdateMercaderiaDTOValidator>();
+            services.AddTransient<IValidator<AddComandaDTO>, AddComandaDTOValidator>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurante.Api", Version = "v1" });
             });
         }
 
-        private IServiceCollection MercaderiaQuery()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurante.Api v1"));
             }

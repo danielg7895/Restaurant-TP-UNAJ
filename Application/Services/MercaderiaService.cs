@@ -44,7 +44,10 @@ namespace Application.Services
 
         public Mercaderia GetMercaderia(int id)
         {
-            return _query.GetMercaderia(id);
+            Mercaderia mercaderia = _query.GetMercaderia(id);
+            if (mercaderia == null) throw new InvalidIdentifier("id");
+
+            return mercaderia;
         }
 
         public Mercaderia GetMercaderiaByFilter<T>(T filter, string key)

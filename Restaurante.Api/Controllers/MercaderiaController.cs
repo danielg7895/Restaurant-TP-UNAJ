@@ -24,6 +24,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status201Created)]
         public IActionResult AddMercaderia([FromBody]AddMercaderiaDTO mercaderiaDTO)
         {
+            bool isValid = ModelState.IsValid;
             try
             {
                 return new JsonResult(_service.AddMercaderia(mercaderiaDTO)) { StatusCode = 201};

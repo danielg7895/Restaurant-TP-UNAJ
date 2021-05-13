@@ -29,11 +29,17 @@ namespace Application.Services
                 throw new InvalidIdentifier();
             }
 
+            int totalPrice = 0;
+            mercaderias.ForEach(m =>
+            {
+                totalPrice += m.Price;
+            });
+
             Comanda comanda = new()
             {
                 Date = DateTime.Now,
                 FormaEntregaId = comandaDTO.FormaEntregaId,
-                TotalPrice = comandaDTO.TotalPrice
+                TotalPrice = totalPrice
             };
             _repository.Add(comanda);
 
