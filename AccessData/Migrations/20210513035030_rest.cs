@@ -118,16 +118,9 @@ namespace AccessData.Migrations
                 columns: new[] { "Id", "Description" },
                 values: new object[,]
                 {
-                    { 1, "Entrada" },
-                    { 2, "Minutas" },
-                    { 3, "Pastas" },
-                    { 4, "Parrilla" },
-                    { 5, "Pizzas" },
-                    { 6, "Sandwich" },
-                    { 7, "Ensaladas" },
-                    { 8, "Bebidas" },
-                    { 9, "Cerveza Artesanal" },
-                    { 10, "Postres" }
+                    { 1, "Platos" },
+                    { 2, "Bebidas" },
+                    { 3, "Postres" }
                 });
 
             migrationBuilder.CreateIndex(

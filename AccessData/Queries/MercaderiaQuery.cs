@@ -63,7 +63,10 @@ namespace AccessData.Queries
             tiposId.ForEach(tipoId =>
             {
                 List<Mercaderia> mercaderia = GetMercaderiasByFilter(tipoId, "TipoMercaderiaId");
-                mercaderias = mercaderias.Union(mercaderia).ToList();
+                if (mercaderia != null)
+                {
+                    mercaderias = mercaderias.Union(mercaderia).ToList();
+                }
             });
 
             return mercaderias;

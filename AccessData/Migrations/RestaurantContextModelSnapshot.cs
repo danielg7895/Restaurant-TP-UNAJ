@@ -157,51 +157,16 @@ namespace AccessData.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Entrada"
+                            Description = "Platos"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Minutas"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Pastas"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Parrilla"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Pizzas"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Sandwich"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Description = "Ensaladas"
-                        },
-                        new
-                        {
-                            Id = 8,
                             Description = "Bebidas"
                         },
                         new
                         {
-                            Id = 9,
-                            Description = "Cerveza Artesanal"
-                        },
-                        new
-                        {
-                            Id = 10,
+                            Id = 3,
                             Description = "Postres"
                         });
                 });
