@@ -12,6 +12,9 @@ namespace Domain.Interfaces
     {
         public Comanda AddComanda(AddComandaDTO comanda);
         public Comanda GetComanda(string comandaGuidStr);
-
+        public Comanda GetComandaByDate(string date);
+        public List<Comanda> GetComandaByDateList(string strDate);
+        public Comanda GetComandaByFilter<T>(T filter, string key);
+        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
     }
 }

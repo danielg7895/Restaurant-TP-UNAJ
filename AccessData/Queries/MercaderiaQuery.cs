@@ -4,14 +4,17 @@ using SqlKata.Execution;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace AccessData.Queries
 {
     public interface IMercaderiaQuery
     {
         public Mercaderia GetMercaderia(int id);
-        public Mercaderia GetMercaderiaByFilter<T>(T filter, string key);
+        public Mercaderia GetFirstMercaderiaByFilter<T>(T filter, string key);
+        public List<Mercaderia> GetMercaderiasByFilter<T>(T filter, string key);
         public List<Mercaderia> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key);
+        public List<Mercaderia> GetMercaderiasByTipos(List<int> tiposId);
     }
 
     public class MercaderiaQuery : IMercaderiaQuery
@@ -31,7 +34,7 @@ namespace AccessData.Queries
             return mercaderia;
         }
 
-        public Mercaderia GetMercaderiaByFilter<T>(T filter, string key)
+        public Mercaderia GetFirstMercaderiaByFilter<T>(T filter, string key)
         {
             Mercaderia mercaderia = _db.Query("Mercaderias").Where(key, filter).FirstOrDefault<Mercaderia>();
 
@@ -46,9 +49,29 @@ namespace AccessData.Queries
             List<Mercaderia> mercaderias = new();
             filterTypeList.ForEach(filter =>
             {
-                Mercaderia mercaderia = GetMercaderiaByFilter(filter, key);
+                Mercaderia mercaderia = GetFirstMercaderiaByFilter(filter, key);
                 if (mercaderia != null) mercaderias.Add(mercaderia);
             });
+
+            return mercaderias;
+        }
+
+        public List<Mercaderia> GetMercaderiasByTipos(List<int> tiposId)
+        {
+            List<Mercaderia> mercaderias = new();
+            tiposId = tiposId.Distinct().ToList();
+            tiposId.ForEach(tipoId =>
+            {
+                List<Mercaderia> mercaderia = GetMercaderiasByFilter(tipoId, "TipoMercaderiaId");
+                mercaderias = mercaderias.Union(mercaderia).ToList();
+            });
+
+            return mercaderias;
+        }
+
+        public List<Mercaderia> GetMercaderiasByFilter<T>(T filter, string key)
+        {
+            List<Mercaderia> mercaderias = _db.Query("Mercaderias").Where(key, filter).Get<Mercaderia>().ToList();
 
             return mercaderias;
         }

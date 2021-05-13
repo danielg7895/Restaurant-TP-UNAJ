@@ -42,6 +42,7 @@ namespace Restaurante.Api
             // Queries
             services.AddTransient<IComandaQuery, ComandaQuery>();
             services.AddTransient<IMercaderiaQuery, MercaderiaQuery>();
+            services.AddTransient<ITipoMercaderiaQuery, TipoMercaderiaQuery>();
 
             // Repositories
             services.AddTransient<IGenericRepository, GenericRepository>();

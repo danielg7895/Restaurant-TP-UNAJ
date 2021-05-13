@@ -36,16 +36,9 @@ namespace AccessData
             modelBuilder.Entity<TipoMercaderia>().Property(e => e.Description).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<TipoMercaderia>().HasData(new TipoMercaderia[]
             {
-                new TipoMercaderia { Id = 1, Description = "Entrada" },
-                new TipoMercaderia { Id = 2, Description = "Minutas" },
-                new TipoMercaderia { Id = 3, Description = "Pastas" },
-                new TipoMercaderia { Id = 4, Description = "Parrilla" },
-                new TipoMercaderia { Id = 5, Description = "Pizzas" },
-                new TipoMercaderia { Id = 6, Description = "Sandwich" },
-                new TipoMercaderia { Id = 7, Description = "Ensaladas" },
-                new TipoMercaderia { Id = 8, Description = "Bebidas" },
-                new TipoMercaderia { Id = 9, Description = "Cerveza Artesanal" },
-                new TipoMercaderia { Id = 10, Description = "Postres" }
+                new TipoMercaderia { Id = 1, Description = "Platos" },
+                new TipoMercaderia { Id = 2, Description = "Bebidas" },
+                new TipoMercaderia { Id = 3, Description = "Postres" }
             });
 
             // FormaEntrega

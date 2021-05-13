@@ -51,6 +51,25 @@ namespace Restaurante.Api.Controllers
                 return BadRequest(e.Message);
             }
         }
-        
+
+        [HttpGet]
+        [ProducesResponseType(typeof(Comanda), StatusCodes.Status200OK)]
+        public IActionResult GetComandaByDate([FromQuery]string fecha)
+        {
+            try
+            {
+                return new JsonResult(_service.GetComandaByDateList(fecha)) { StatusCode = 200 };
+            }
+            catch (InvalidDate e)
+            {
+                string jsonString = $"{{ \"Error\": \"{e.Message}\" }}";
+                Response.StatusCode = 404;
+                return Content(jsonString, "application/json");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

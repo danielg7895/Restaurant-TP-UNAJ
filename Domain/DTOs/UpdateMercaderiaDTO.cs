@@ -1,6 +1,10 @@
-﻿namespace Domain.Entities
+﻿using Domain.Entities;
+using System;
+using System.Collections.Generic;
+
+namespace Domain.DTOs
 {
-    public class Mercaderia
+    public class UpdateMercaderiaDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -9,7 +13,5 @@
         public string Ingredients { get; set; }
         public string Preparation { get; set; }
         public string Image { get; set; }
-        public TipoMercaderia TipoMercaderia { get; set; }
-
     }
 }

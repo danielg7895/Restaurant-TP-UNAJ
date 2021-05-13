@@ -59,5 +59,49 @@ namespace Application.Services
             return _query.GetComanda(comandaGuid);
         }
 
+        public Comanda GetComandaByDate(string strDate)
+        {
+            Comanda comanda;
+            try
+            {
+                strDate = strDate.Split(" ")[0];
+                DateTime date = DateTime.Parse(strDate);
+
+                comanda = _query.GetComandaByDate(date);
+            }
+            catch
+            {
+                throw new InvalidDate();
+            }
+            return comanda;
+        }
+
+        public List<Comanda> GetComandaByDateList(string strDate)
+        {
+            List<Comanda> comandas;
+            try
+            {
+                strDate = strDate.Split(" ")[0];
+                DateTime date = DateTime.Parse(strDate);
+
+                comandas = _query.GetComandaByDateList(date);
+            }
+            catch
+            {
+                throw new InvalidDate();
+            }
+            return comandas;
+        }
+
+        public Comanda GetComandaByFilter<T>(T filter, string key)
+        {
+            return _query.GetComandaByFilter(filter, key);
+        }
+
+        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key)
+        {
+            return _query.GetComandaByFilterList(filterTypeList, key);
+        }
+
     }
 }

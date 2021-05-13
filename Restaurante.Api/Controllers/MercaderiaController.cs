@@ -1,12 +1,11 @@
-﻿using Domain.DTOs;
+﻿using Application;
+using Domain.DTOs;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restaurante.Api.Controllers
 {
@@ -28,7 +27,13 @@ namespace Restaurante.Api.Controllers
             try
             {
                 return new JsonResult(_service.AddMercaderia(mercaderiaDTO)) { StatusCode = 201};
-            } 
+            }
+            catch (InvalidIdentifier e)
+            {
+                Response.StatusCode = 404;
+                string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
+                return Content(jsonString, "application/json");
+            }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
@@ -43,6 +48,56 @@ namespace Restaurante.Api.Controllers
             {
                 return new JsonResult(_service.GetMercaderia(id)) { StatusCode = 200 };
             } 
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
+        public IActionResult GetMercaderiasByTipos([FromQuery]List<int> tiposId)
+        {
+            try
+            {
+                return new JsonResult(_service.GetMercaderiasByTipos(tiposId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut]
+        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
+        public IActionResult UpdateMercaderia([FromBody]UpdateMercaderiaDTO mercaderiaDTO)
+        {
+            try
+            {
+                return new JsonResult(_service.UpdateMercaderia(mercaderiaDTO));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
+        public IActionResult DeleteMercaderia(int id)
+        {
+            try
+            {
+                _service.RemoveMercaderia(id);
+                string jsonString = $"{{ \"Status\": \"Mercaderia eliminada.\" }}";
+                return Content(jsonString, "application/json");
+            } 
+            catch (InvalidIdentifier e)
+            {
+                Response.StatusCode = 404;
+                string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
+                return Content(jsonString, "application/json");
+            }
             catch (Exception e)
             {
                 return BadRequest(e.Message);

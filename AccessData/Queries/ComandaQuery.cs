@@ -2,6 +2,7 @@
 using SqlKata.Compilers;
 using SqlKata.Execution;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -10,6 +11,10 @@ namespace AccessData.Queries
     public interface IComandaQuery
     {
         public Comanda GetComanda(Guid comandaId);
+        public Comanda GetComandaByDate(DateTime date);
+        public List<Comanda> GetComandaByDateList(DateTime date);
+        public Comanda GetComandaByFilter<T>(T filter, string key);
+        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
     }
 
     public class ComandaQuery : IComandaQuery
@@ -28,42 +33,43 @@ namespace AccessData.Queries
             return comanda;
         }
 
-        /**
-        public string GetComandasAsString()
+        public Comanda GetComandaByDate(DateTime date)
         {
+            DateTime nextDay = date.AddDays(1);
+            Comanda comanda = _db.Query("Comandas").Where("Date", ">=", date).Where("Date", "<", nextDay).FirstOrDefault<Comanda>();
+
+            return comanda;
+        }
+
+        public List<Comanda> GetComandaByDateList(DateTime date)
+        {
+            DateTime nextDay = date.AddDays(1);
+            List<Comanda> comandas = _db.Query("Comandas").Where("Date", ">=", date).Where("Date", "<", nextDay).Get<Comanda>().ToList();
+
+            return comandas;
+        }
+
+        public Comanda GetComandaByFilter<T>(T filter, string key)
+        {
+            Comanda comanda = _db.Query("Comandas").Where(key, filter).FirstOrDefault<Comanda>();
+
+            return comanda;
+        }
+
+        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key)
+        {
+            // Busca todas las Comandas en la base de datos que tengan una key
+            // con nombre de 'key' y donde el valor de la key es de tipo T
+
             List<Comanda> comandas = new();
-            using (RestaurantContext _context = new())
+            filterTypeList.ForEach(filter =>
             {
-                comandas = _context.Comandas.ToList();
-            }
-
-            if (!comandas.Any()) return "No hay ninguna comanda registrada.";
-
-
-            string message = "";
-            comandas.ForEach(c =>
-            {
-                List<ComandaMercaderia> comandaMercaderias = ComandaMercaderiaService.GetComandaMercaderias(c.Id);
-                FormaEntrega formaEntrega = FormaEntregaService.GetFormaEntrega(c.FormaEntregaId);
-
-                message += $"------------- ID Comanda: {c.Id} -------------\n";
-                if (comandaMercaderias != null)
-                {
-                    message += $"Listado de mercaderias de la comanda:\n";
-                    comandaMercaderias.ForEach(cm =>
-                    {
-                        message += $"Nombre: {cm.Mercaderia.Name}\n" +
-                        $"Tipo: {cm.Mercaderia.TipoMercaderia.Description}\n";
-                    });
-                }
-
-                message += $"Precio Total: {c.TotalPrice}\n" +
-                $"Forma de Entrega: {formaEntrega.Description}\n" +
-                $"---------------------------------\n";
+                Comanda comanda = GetComandaByFilter(filter, key);
+                if (comanda != null) comandas.Add(comanda);
             });
 
-            return $"############ Lista de comandas registradas ############ \n{message}\n################################################\n";
-        }**/
+            return comandas;
+        }
 
     }
 }
