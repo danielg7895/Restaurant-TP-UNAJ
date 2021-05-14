@@ -20,7 +20,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Comanda), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ComandaResponseDTO), StatusCodes.Status201Created)]
         public IActionResult AddComanda([FromBody]AddComandaDTO comanda)
         {
             try
@@ -40,7 +40,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Comanda), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ComandaResponseDTO), StatusCodes.Status200OK)]
         public IActionResult GetComanda(string id)
         {
             try

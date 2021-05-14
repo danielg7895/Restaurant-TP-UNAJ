@@ -8,16 +8,13 @@ using Domain.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SqlKata.Compilers;
-using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -48,6 +45,7 @@ namespace Restaurante.Api
             services.AddTransient<IComandaQuery, ComandaQuery>();
             services.AddTransient<IMercaderiaQuery, MercaderiaQuery>();
             services.AddTransient<ITipoMercaderiaQuery, TipoMercaderiaQuery>();
+            services.AddTransient<IComandaMercaderiaQuery, ComandaMercaderiaQuery>();
 
             // Repositories
             services.AddTransient<IGenericRepository, GenericRepository>();

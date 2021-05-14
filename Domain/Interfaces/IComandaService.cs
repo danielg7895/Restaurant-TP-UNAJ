@@ -10,9 +10,9 @@ namespace Domain.Interfaces
 {
     public interface IComandaService
     {
-        public Comanda AddComanda(AddComandaDTO comanda);
-        public Comanda GetComanda(string comandaGuidStr);
-        public Comanda GetComandaByDate(string date);
+        public ComandaResponseDTO AddComanda(AddComandaDTO comanda);
+        public ComandaResponseDTO GetComanda(string comandaGuidStr);
+        public ComandaResponseDTO GetComandaByDate(string date);
         public List<Comanda> GetComandaByDateList(string strDate);
         public Comanda GetComandaByFilter<T>(T filter, string key);
         public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key);

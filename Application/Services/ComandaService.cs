@@ -13,15 +13,17 @@ namespace Application.Services
         private readonly IGenericRepository _repository;
         private readonly IComandaQuery _query;
         private readonly IMercaderiaQuery _mercaderiaQuery;
+        private readonly IComandaMercaderiaQuery _comandaMercaderiaQuery;
 
-        public ComandaService(IGenericRepository repo, IComandaQuery query, IMercaderiaQuery mercaderiaQuery)
+        public ComandaService(IGenericRepository repo, IComandaQuery query, IMercaderiaQuery mercaderiaQuery, IComandaMercaderiaQuery comandaMercaderiaQuery)
         {
             _repository = repo;
             _query = query;
             _mercaderiaQuery = mercaderiaQuery;
+            _comandaMercaderiaQuery = comandaMercaderiaQuery;
         }
 
-        public Comanda AddComanda(AddComandaDTO comandaDTO)
+        public ComandaResponseDTO AddComanda(AddComandaDTO comandaDTO)
         {
             List<Mercaderia> mercaderias = _mercaderiaQuery.GetMercaderiaByFilterList(comandaDTO.MercaderiasIds, "id");
             if (mercaderias.Count == 0)
@@ -43,7 +45,7 @@ namespace Application.Services
             };
             _repository.Add(comanda);
 
-
+            List<int> comandaMercaderiasId = new();
             mercaderias.ForEach(mercaderia =>
             {
                 ComandaMercaderia comandaMercaderia = new()
@@ -53,33 +55,79 @@ namespace Application.Services
                 };
 
                 _repository.Add(comandaMercaderia);
+                comandaMercaderiasId.Add(comandaMercaderia.Id);
             });
 
+            ComandaResponseDTO comandaResponseDTO = new()
+            {
+                Id = comanda.Id,
+                ComandaMercaderiasId = comandaMercaderiasId,
+                Date = comanda.Date,
+                FormaEntregaId = comanda.FormaEntregaId,
+                TotalPrice = comanda.TotalPrice
+            };
 
-            return comanda;
+            return comandaResponseDTO;
         }
 
-        public Comanda GetComanda(string comandaGuidStr)
+        public ComandaResponseDTO GetComanda(string comandaGuidStr)
         {
             Guid comandaGuid = new(comandaGuidStr);
-            return _query.GetComanda(comandaGuid);
+            Comanda comanda = _query.GetComanda(comandaGuid);
+            if (comanda == null) throw new InvalidIdentifier();
+
+            List<ComandaMercaderia> comandaMercaderias = _comandaMercaderiaQuery.GetComandaMercaderiasByFilter(comanda.Id, "ComandaId");
+            List<int> comandaMercaderiasId = new();
+            comandaMercaderias.ForEach(cm =>
+            {
+                comandaMercaderiasId.Add(cm.Id);
+            });
+
+            ComandaResponseDTO comandaResponseDTO = new()
+            {
+                Id = comanda.Id,
+                FormaEntregaId = comanda.FormaEntregaId,
+                TotalPrice = comanda.TotalPrice,
+                Date = comanda.Date,
+                ComandaMercaderiasId = comandaMercaderiasId
+            };
+
+            return comandaResponseDTO;
         }
 
-        public Comanda GetComandaByDate(string strDate)
+        public ComandaResponseDTO GetComandaByDate(string strDate)
         {
             Comanda comanda;
+            ComandaResponseDTO comandaResponseDTO;
             try
             {
                 strDate = strDate.Split(" ")[0];
                 DateTime date = DateTime.Parse(strDate);
 
                 comanda = _query.GetComandaByDate(date);
+
+                List<ComandaMercaderia> comandaMercaderias = _comandaMercaderiaQuery.GetComandaMercaderiasByFilter(comanda.Id, "ComandaId");
+                List<int> comandaMercaderiasId = new();
+                comandaMercaderias.ForEach(cm =>
+                {
+                    comandaMercaderiasId.Add(cm.Id);
+                });
+
+                comandaResponseDTO = new()
+                {
+                    Id = comanda.Id,
+                    FormaEntregaId = comanda.FormaEntregaId,
+                    TotalPrice = comanda.TotalPrice,
+                    Date = comanda.Date,
+                    ComandaMercaderiasId = comandaMercaderiasId
+                };
             }
             catch
             {
                 throw new InvalidDate();
             }
-            return comanda;
+
+            return comandaResponseDTO;
         }
 
         public List<Comanda> GetComandaByDateList(string strDate)

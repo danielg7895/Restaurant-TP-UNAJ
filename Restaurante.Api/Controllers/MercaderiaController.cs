@@ -49,6 +49,12 @@ namespace Restaurante.Api.Controllers
             {
                 return new JsonResult(_service.GetMercaderia(id)) { StatusCode = 200 };
             } 
+            catch (InvalidIdentifier e)
+            {
+                Response.StatusCode = 404;
+                string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
+                return Content(jsonString, "application/json");
+            }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
