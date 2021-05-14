@@ -1,10 +1,10 @@
-﻿using Domain.Entities;
-using Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using Application;
 using Domain.DTOs;
-using Application;
+using Domain.Entities;
+using Domain.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Restaurante.Api.Controllers
 {

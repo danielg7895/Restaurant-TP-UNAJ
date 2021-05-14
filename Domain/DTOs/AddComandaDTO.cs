@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-using FluentValidation;
-using System;
+﻿using FluentValidation;
 using System.Collections.Generic;
 
 namespace Domain.DTOs

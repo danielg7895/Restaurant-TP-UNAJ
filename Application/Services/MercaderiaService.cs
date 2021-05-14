@@ -1,12 +1,9 @@
-﻿using AccessData;
-using AccessData.Queries;
+﻿using AccessData.Queries;
 using Domain.Commands;
 using Domain.DTOs;
 using Domain.Entities;
 using Domain.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Application.Services
 {

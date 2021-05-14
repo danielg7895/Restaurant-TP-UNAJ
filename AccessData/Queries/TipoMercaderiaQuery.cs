@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using SqlKata.Compilers;
 using SqlKata.Execution;
-using System;
 using System.Data;
 
 namespace AccessData.Queries
