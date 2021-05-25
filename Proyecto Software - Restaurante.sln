@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessData", "AccessData\AccessData.csproj", "{0150DBF8-AD58-4A5D-B25D-A3A01A993003}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurante.Api", "Restaurante.Api\Restaurante.Api.csproj", "{6F5C344A-0A41-4D09-A5CE-8B5B7FE55A41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurante.Api", "Restaurante.Api\Restaurante.Api.csproj", "{6F5C344A-0A41-4D09-A5CE-8B5B7FE55A41}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{0B165F5F-A8AA-49CA-B98E-58E637A87EE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{5E519742-8D15-4985-AD00-1FABAFA075BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +40,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13528EA2-69E0-44AC-ABA1-B9F2B2F2FD80} = {0B165F5F-A8AA-49CA-B98E-58E637A87EE0}
+		{31422F78-AEB6-422E-9196-56CEBBECAA7F} = {0B165F5F-A8AA-49CA-B98E-58E637A87EE0}
+		{0150DBF8-AD58-4A5D-B25D-A3A01A993003} = {0B165F5F-A8AA-49CA-B98E-58E637A87EE0}
+		{6F5C344A-0A41-4D09-A5CE-8B5B7FE55A41} = {0B165F5F-A8AA-49CA-B98E-58E637A87EE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4AED1325-5690-40AB-B8BC-0C9F071BAF83}
