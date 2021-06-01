@@ -18,9 +18,9 @@ namespace Domain.DTOs
         public UpdateMercaderiaDTOValidator()
         {
             RuleFor(m => m.Name).MinimumLength(1).MaximumLength(50).NotEmpty().WithMessage("Nombre no puede estar vacio o contener mas de 50 caracteres.");
-            RuleFor(m => m.Ingredients).MinimumLength(1).MaximumLength(50).NotEmpty().WithMessage("Ingredientes no puede estar vacio o contener mas de 50 caracteres.");
-            RuleFor(m => m.Preparation).MinimumLength(1).MaximumLength(50).NotEmpty().WithMessage("Preparation no puede estar vacio o contener mas de 50 caracteres.");
-            RuleFor(m => m.Image).MinimumLength(1).MaximumLength(50).NotEmpty().WithMessage("Image no puede estar vacio o contener mas de 50 caracteres.");
+            RuleFor(m => m.Ingredients).MinimumLength(1).MaximumLength(255).NotEmpty().WithMessage("Ingredientes no puede estar vacio o contener mas de 50 caracteres.");
+            RuleFor(m => m.Preparation).MinimumLength(1).MaximumLength(255).NotEmpty().WithMessage("Preparation no puede estar vacio o contener mas de 50 caracteres.");
+            RuleFor(m => m.Image).MinimumLength(1).MaximumLength(255).NotEmpty().WithMessage("Image no puede estar vacio o contener mas de 50 caracteres.");
             RuleFor(m => m.Price).GreaterThan(-1).LessThan(int.MaxValue).NotNull().WithMessage($"Precio debe estar entre 0 y {int.MaxValue}");
         }
     }

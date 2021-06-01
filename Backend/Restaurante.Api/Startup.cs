@@ -33,6 +33,10 @@ namespace Restaurante.Api
             string sqlConnection = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<RestaurantContext>(options => options.UseSqlServer(sqlConnection));
 
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
             services.AddControllers().AddFluentValidation();
 
             services.AddTransient<Compiler, SqlServerCompiler>();
@@ -75,6 +79,7 @@ namespace Restaurante.Api
             }
 
             app.UseRouting();
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthorization();
 

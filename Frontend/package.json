@@ -1,0 +1,26 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Proyecto Software - Restaurante Frontend",
+  "main": "src/index.js",
+  "proxy": "http://127.0.0.1:45148",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielg7895/Restaurant-TP-UNAJ.git"
+  },
+  "author": "daniel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielg7895/Restaurant-TP-UNAJ/issues"
+  },
+  "homepage": "https://github.com/danielg7895/Restaurant-TP-UNAJ#readme",
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "express": "^4.17.1",
+    "popper.js": "^1.16.1"
+  }
+}
