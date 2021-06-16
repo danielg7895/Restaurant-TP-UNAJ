@@ -6,12 +6,13 @@ namespace Domain.Interfaces
 {
     public interface IMercaderiaService
     {
-        public Mercaderia AddMercaderia(AddMercaderiaDTO mercaderiaDTO);
-        public Mercaderia GetMercaderia(int id);
-        public Mercaderia GetMercaderiaByFilter<T>(T filter, string key);
-        public List<Mercaderia> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key);
-        public List<Mercaderia> GetMercaderiasByTipos(List<int> tiposId);
+        public GetMercaderiaDTO AddMercaderia(AddMercaderiaDTO mercaderiaDTO);
+        public GetMercaderiaDTO GetMercaderia(int id);
+        public List<GetMercaderiaDTO> GetMercaderias();
+        public GetMercaderiaDTO GetMercaderiaByFilter<T>(T filter, string key);
+        public List<GetMercaderiaDTO> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key);
+        public List<GetMercaderiaDTO> GetMercaderiasByTipos(List<int> tiposId);
         public void RemoveMercaderia(int id);
-        public Mercaderia UpdateMercaderia(UpdateMercaderiaDTO mercaderiaDTO);
+        public GetMercaderiaDTO UpdateMercaderia(int mercaderiaId, AddMercaderiaDTO mercaderiaDTO);
     }
 }

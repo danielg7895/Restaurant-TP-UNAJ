@@ -12,4 +12,9 @@ namespace Application
     {
         public InvalidDate() : base("El formato del Dia ingresado no es valido. El formato debe ser yyyy-mm-dd") { }
     }
+
+    public class InvalidGUID : Exception
+    {
+        public InvalidGUID() : base("El Guid ingresado es incorrecto.") { }
+    }
 }

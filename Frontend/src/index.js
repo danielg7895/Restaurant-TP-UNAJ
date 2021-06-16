@@ -15,7 +15,7 @@ window.onload = () => {
         Render(HomeScreen())
     }
     else if(currentPath === "/comandas") {
-        Render(ComandaScreen)
+        Render(ComandaScreen())
     }
 
 

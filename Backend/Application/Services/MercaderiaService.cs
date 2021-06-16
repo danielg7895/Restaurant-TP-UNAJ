@@ -20,71 +20,115 @@ namespace Application.Services
             _queryTipoMercaderia = queryTipoMercaderia;
         }
 
-        public Mercaderia AddMercaderia(AddMercaderiaDTO mercaderiaDTO)
+        public GetMercaderiaDTO AddMercaderia(AddMercaderiaDTO mercaderiaDTO)
         {
             TipoMercaderia tipoMercaderia = _queryTipoMercaderia.GetTipoMercaderia(mercaderiaDTO.TipoMercaderiaId);
             if (tipoMercaderia == null) throw new InvalidIdentifier("tipoMercaderiaId");
 
             Mercaderia mercaderia = new()
             {
-                Name = mercaderiaDTO.Name,
-                Ingredients = mercaderiaDTO.Ingredients,
-                Preparation = mercaderiaDTO.Preparation,
+                Nombre = mercaderiaDTO.Nombre,
+                Ingredientes = mercaderiaDTO.Ingredientes,
+                Preparacion = mercaderiaDTO.Preparacion,
                 TipoMercaderiaId = mercaderiaDTO.TipoMercaderiaId,
-                Price = mercaderiaDTO.Price,
-                Image = mercaderiaDTO.Image
+                Precio = mercaderiaDTO.Precio,
+                Imagen = mercaderiaDTO.Imagen
             };
             _repository.Add(mercaderia);
 
-            return mercaderia;
+            GetMercaderiaDTO responseMercaderia = new()
+            {
+                Id = mercaderia.Id,
+                Nombre = mercaderiaDTO.Nombre,
+                Ingredientes = mercaderiaDTO.Ingredientes,
+                Preparacion = mercaderiaDTO.Preparacion,
+                TipoMercaderiaId = mercaderiaDTO.TipoMercaderiaId,
+                Precio = mercaderiaDTO.Precio,
+                Imagen = mercaderiaDTO.Imagen
+            };
+
+            return responseMercaderia;
         }
 
-        public Mercaderia GetMercaderia(int id)
+        public GetMercaderiaDTO GetMercaderia(int id)
         {
-            Mercaderia mercaderia = _query.GetMercaderia(id);
+            GetMercaderiaDTO mercaderia = _query.GetMercaderia(id);
             if (mercaderia == null) throw new InvalidIdentifier();
 
             return mercaderia;
         }
 
-        public Mercaderia GetMercaderiaByFilter<T>(T filter, string key)
+        public List<GetMercaderiaDTO> GetMercaderias()
+        {
+            List<GetMercaderiaDTO> mercaderias = _query.GetMercaderias();
+
+            return mercaderias;
+        }
+
+        public GetMercaderiaDTO GetMercaderiaByFilter<T>(T filter, string key)
         {
             return _query.GetFirstMercaderiaByFilter(filter, key);
         }
 
-        public List<Mercaderia> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key)
+        public List<GetMercaderiaDTO> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key)
         {
             return _query.GetMercaderiaByFilterList(filterTypeList, key);
         }
 
-        public List<Mercaderia> GetMercaderiasByTipos(List<int> tiposId)
+        public List<GetMercaderiaDTO> GetMercaderiasByTipos(List<int> tiposId)
         {
             return _query.GetMercaderiasByTipos(tiposId);
         }
         public void RemoveMercaderia(int id)
         {
-            Mercaderia mercaderia = _query.GetMercaderia(id);
+            GetMercaderiaDTO mercaderia = _query.GetMercaderia(id);
             if (mercaderia == null) throw new InvalidIdentifier();
 
-            _repository.Remove(mercaderia);
+            Mercaderia merc = new()
+            {
+                Id = id,
+                Imagen = mercaderia.Imagen,
+                Ingredientes = mercaderia.Ingredientes,
+                Nombre = mercaderia.Nombre,
+                Precio = mercaderia.Precio,
+                Preparacion = mercaderia.Preparacion,
+                TipoMercaderiaId = mercaderia.TipoMercaderiaId
+            };
+
+            _repository.Remove(merc);
         }
 
-        public Mercaderia UpdateMercaderia(UpdateMercaderiaDTO mercaderiaDTO)
+        public GetMercaderiaDTO UpdateMercaderia(int mercaderiaId, AddMercaderiaDTO mercaderiaDTO)
         {
-            // falta validar tipomnercaderia, precio maximo, id mercaderia.
+            GetMercaderiaDTO m = _query.GetMercaderia(mercaderiaId);
+            if (m == null)
+            {
+                throw new InvalidIdentifier("mercaderia");
+            }
+
             Mercaderia mercaderia = new()
             {
-                Id = mercaderiaDTO.Id,
-                Name = mercaderiaDTO.Name,
-                Ingredients = mercaderiaDTO.Ingredients,
-                Preparation = mercaderiaDTO.Preparation,
+                Id = mercaderiaId,
+                Nombre = mercaderiaDTO.Nombre,
+                Ingredientes = mercaderiaDTO.Ingredientes,
+                Preparacion = mercaderiaDTO.Preparacion,
                 TipoMercaderiaId = mercaderiaDTO.TipoMercaderiaId,
-                Price = mercaderiaDTO.Price,
-                Image = mercaderiaDTO.Image
+                Precio = mercaderiaDTO.Precio,
+                Imagen = mercaderiaDTO.Imagen
             };
             _repository.Update(mercaderia);
 
-            return mercaderia;
+            GetMercaderiaDTO responseMercaderia = new()
+            {
+                Id = mercaderiaId,
+                Nombre = mercaderiaDTO.Nombre,
+                Ingredientes = mercaderiaDTO.Ingredientes,
+                Preparacion = mercaderiaDTO.Preparacion,
+                TipoMercaderiaId = mercaderiaDTO.TipoMercaderiaId,
+                Precio = mercaderiaDTO.Precio,
+                Imagen = mercaderiaDTO.Imagen
+            };
+            return responseMercaderia;
         }
     }
 }

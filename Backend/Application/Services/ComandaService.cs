@@ -23,9 +23,9 @@ namespace Application.Services
             _comandaMercaderiaQuery = comandaMercaderiaQuery;
         }
 
-        public ComandaResponseDTO AddComanda(AddComandaDTO comandaDTO)
+        public GetComandaDTO AddComanda(AddComandaDTO comandaDTO)
         {
-            List<Mercaderia> mercaderias = _mercaderiaQuery.GetMercaderiaByFilterList(comandaDTO.MercaderiasIds, "id");
+            List<GetMercaderiaDTO> mercaderias = _mercaderiaQuery.GetMercaderiaByFilterList(comandaDTO.Mercaderia, "id");
             if (mercaderias.Count == 0)
             {
                 throw new InvalidIdentifier();
@@ -34,13 +34,13 @@ namespace Application.Services
             int totalPrice = 0;
             mercaderias.ForEach(m =>
             {
-                totalPrice += m.Price;
+                totalPrice += m.Precio;
             });
 
             Comanda comanda = new()
             {
                 Date = DateTime.Now,
-                FormaEntregaId = comandaDTO.FormaEntregaId,
+                FormaEntregaId = comandaDTO.FormaEntrega,
                 TotalPrice = totalPrice
             };
             _repository.Add(comanda);
@@ -58,55 +58,43 @@ namespace Application.Services
                 comandaMercaderiasId.Add(comandaMercaderia.Id);
             });
 
-            ComandaResponseDTO comandaResponseDTO = new()
+            GetComandaDTO comandaResponseDTO = new()
             {
+                Dia = comanda.Date,
+                FormaEntrega = comanda.FormaEntregaId,
                 Id = comanda.Id,
-                ComandaMercaderiasId = comandaMercaderiasId,
-                Date = comanda.Date,
-                FormaEntregaId = comanda.FormaEntregaId,
-                TotalPrice = comanda.TotalPrice
+                PrecioTotal = comanda.TotalPrice
             };
 
             return comandaResponseDTO;
         }
 
-        public ComandaResponseDTO GetComanda(string comandaGuidStr)
+        public GetComandaDTO GetComanda(string comandaGuidStr)
         {
-            Guid comandaGuid = new(comandaGuidStr);
-            Comanda comanda = _query.GetComanda(comandaGuid);
-            if (comanda == null) throw new InvalidIdentifier();
-
-            List<ComandaMercaderia> comandaMercaderias = _comandaMercaderiaQuery.GetComandaMercaderiasByFilter(comanda.Id, "ComandaId");
-            List<int> comandaMercaderiasId = new();
-            comandaMercaderias.ForEach(cm =>
+            Guid comandaGuid;
+            try
             {
-                comandaMercaderiasId.Add(cm.Id);
-            });
+                comandaGuid = new(comandaGuidStr);
+            }
+            catch { throw new InvalidGUID(); }
+            GetComandaDTO comandaDTO = _query.GetComanda(comandaGuid);
+            if (comandaDTO == null) throw new InvalidIdentifier();
 
-            ComandaResponseDTO comandaResponseDTO = new()
-            {
-                Id = comanda.Id,
-                FormaEntregaId = comanda.FormaEntregaId,
-                TotalPrice = comanda.TotalPrice,
-                Date = comanda.Date,
-                ComandaMercaderiasId = comandaMercaderiasId
-            };
-
-            return comandaResponseDTO;
+            return comandaDTO;
         }
 
-        public ComandaResponseDTO GetComandaByDate(string strDate)
+        public GetComandaDTO GetComandaByDate(string strDate)
         {
-            Comanda comanda;
-            ComandaResponseDTO comandaResponseDTO;
+            GetComandaDTO comandaDTO;
+            GetComandaDTO comandaResponseDTO;
             try
             {
                 strDate = strDate.Split(" ")[0];
                 DateTime date = DateTime.Parse(strDate);
 
-                comanda = _query.GetComandaByDate(date);
+                comandaDTO = _query.GetComandaByDate(date);
 
-                List<ComandaMercaderia> comandaMercaderias = _comandaMercaderiaQuery.GetComandaMercaderiasByFilter(comanda.Id, "ComandaId");
+                List<ComandaMercaderia> comandaMercaderias = _comandaMercaderiaQuery.GetComandaMercaderiasByFilter(comandaDTO.Id, "ComandaId");
                 List<int> comandaMercaderiasId = new();
                 comandaMercaderias.ForEach(cm =>
                 {
@@ -115,11 +103,10 @@ namespace Application.Services
 
                 comandaResponseDTO = new()
                 {
-                    Id = comanda.Id,
-                    FormaEntregaId = comanda.FormaEntregaId,
-                    TotalPrice = comanda.TotalPrice,
-                    Date = comanda.Date,
-                    ComandaMercaderiasId = comandaMercaderiasId
+                    Id = comandaDTO.Id,
+                    FormaEntrega = comandaDTO.FormaEntrega,
+                    PrecioTotal = comandaDTO.PrecioTotal,
+                    Dia = comandaDTO.Dia,
                 };
             }
             catch
@@ -130,15 +117,22 @@ namespace Application.Services
             return comandaResponseDTO;
         }
 
-        public List<Comanda> GetComandaByDateList(string strDate)
+        public List<GetComandaDTO> GetComandaByDateList(string strDate)
         {
-            List<Comanda> comandas;
+            List<GetComandaDTO> comandas;
             try
             {
-                strDate = strDate.Split(" ")[0];
-                DateTime date = DateTime.Parse(strDate);
-
-                comandas = _query.GetComandaByDateList(date);
+                DateTime date;
+                if (strDate != "")
+                {
+                    strDate = strDate.Split(" ")[0];
+                    date = DateTime.Parse(strDate);
+                    comandas = _query.GetComandaByDateList(date);
+                }
+                else
+                {
+                    comandas = _query.GetComandas();
+                }
             }
             catch
             {
@@ -147,12 +141,12 @@ namespace Application.Services
             return comandas;
         }
 
-        public Comanda GetComandaByFilter<T>(T filter, string key)
+        public GetComandaDTO GetComandaByFilter<T>(T filter, string key)
         {
             return _query.GetComandaByFilter(filter, key);
         }
 
-        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key)
+        public List<GetComandaDTO> GetComandaByFilterList<T>(List<T> filterTypeList, string key)
         {
             return _query.GetComandaByFilterList(filterTypeList, key);
         }

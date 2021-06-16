@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using SqlKata.Compilers;
 using SqlKata.Execution;
 using System;
@@ -10,11 +11,12 @@ namespace AccessData.Queries
 {
     public interface IComandaQuery
     {
-        public Comanda GetComanda(Guid comandaId);
-        public Comanda GetComandaByDate(DateTime date);
-        public List<Comanda> GetComandaByDateList(DateTime date);
-        public Comanda GetComandaByFilter<T>(T filter, string key);
-        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
+        public GetComandaDTO GetComanda(Guid comandaId);
+        public List<GetComandaDTO> GetComandas();
+        public GetComandaDTO GetComandaByDate(DateTime date);
+        public List<GetComandaDTO> GetComandaByDateList(DateTime date);
+        public GetComandaDTO GetComandaByFilter<T>(T filter, string key);
+        public List<GetComandaDTO> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
     }
 
     public class ComandaQuery : IComandaQuery
@@ -26,45 +28,87 @@ namespace AccessData.Queries
             _db = new QueryFactory(connection, compiler);
         }
 
-        public Comanda GetComanda(Guid comandaId)
+        public GetComandaDTO GetComanda(Guid comandaId)
         {
             Comanda comanda = _db.Query("Comandas").Where("Id", comandaId).FirstOrDefault<Comanda>();
-            
-            return comanda;
+            if (comanda == null) return null;
+
+            GetComandaDTO comandaDTO = new()
+            {
+                Dia = comanda.Date,
+                FormaEntrega = comanda.FormaEntregaId,
+                Id = comanda.Id,
+                PrecioTotal = comanda.TotalPrice
+            };
+
+            return comandaDTO;
         }
 
-        public Comanda GetComandaByDate(DateTime date)
+        public List<GetComandaDTO> GetComandas()
+        {
+            List<Comanda> comandas = _db.Query("Comandas").Get<Comanda>().ToList();
+            if (comandas == null) return null;
+
+            List<GetComandaDTO> comandasDTO = new();
+            comandas.ForEach((comanda) =>
+            {
+                GetComandaDTO comandaDTO = new()
+                {
+                    Dia = comanda.Date,
+                    FormaEntrega = comanda.FormaEntregaId,
+                    Id = comanda.Id,
+                    PrecioTotal = comanda.TotalPrice
+                };
+                comandasDTO.Add(comandaDTO);
+            });
+
+            return comandasDTO;
+        }
+
+        public GetComandaDTO GetComandaByDate(DateTime date)
         {
             DateTime nextDay = date.AddDays(1);
-            Comanda comanda = _db.Query("Comandas").Where("Date", ">=", date).Where("Date", "<", nextDay).FirstOrDefault<Comanda>();
+            GetComandaDTO comanda = _db.Query("Comandas").Where("Date", ">=", date).Where("Date", "<", nextDay).FirstOrDefault<GetComandaDTO>();
 
             return comanda;
         }
 
-        public List<Comanda> GetComandaByDateList(DateTime date)
+        public List<GetComandaDTO> GetComandaByDateList(DateTime date)
         {
             DateTime nextDay = date.AddDays(1);
             List<Comanda> comandas = _db.Query("Comandas").Where("Date", ">=", date).Where("Date", "<", nextDay).Get<Comanda>().ToList();
+            if (comandas == null) return null;
 
-            return comandas;
+            List<GetComandaDTO> comandasDTO = new();
+            comandas.ForEach((comanda) =>
+            {
+                GetComandaDTO comandaDTO = new()
+                {
+                    Dia = comanda.Date,
+                    FormaEntrega = comanda.FormaEntregaId,
+                    Id = comanda.Id,
+                    PrecioTotal = comanda.TotalPrice
+                };
+                comandasDTO.Add(comandaDTO);
+            });
+
+            return comandasDTO;
         }
 
-        public Comanda GetComandaByFilter<T>(T filter, string key)
+        public GetComandaDTO GetComandaByFilter<T>(T filter, string key)
         {
-            Comanda comanda = _db.Query("Comandas").Where(key, filter).FirstOrDefault<Comanda>();
+            GetComandaDTO comanda = _db.Query("Comandas").Where(key, filter).FirstOrDefault<GetComandaDTO>();
 
             return comanda;
         }
 
-        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key)
+        public List<GetComandaDTO> GetComandaByFilterList<T>(List<T> filterTypeList, string key)
         {
-            // Busca todas las Comandas en la base de datos que tengan una key
-            // con nombre de 'key' y donde el valor de la key es de tipo T
 
-            List<Comanda> comandas = new();
+            List<GetComandaDTO> comandas = new();
             filterTypeList.ForEach(filter =>
             {
-                Comanda comanda = GetComandaByFilter(filter, key);
+                GetComandaDTO comanda = GetComandaByFilter(filter, key);
                 if (comanda != null) comandas.Add(comanda);
             });
 

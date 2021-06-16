@@ -2,9 +2,15 @@
 const Footer = () => {
     return (
         /*html*/`
-        <nav class="navbar fixed-bottom navbar-light bg-light">
-            <div class="container">Footer</div>
-        </nav>
+        <div class="footer">
+            <footer class="container-inline">
+                <nav class="navbar navbar-dark bg-dark mt-5">
+                    <div class="navbar-expand m-auto navbar-text">
+                        © 2021 Restaurant NoName <a href="#">Back to top</a>
+                    </div>
+                </nav>
+            </footer>
+        </div>
         `
     )
 }

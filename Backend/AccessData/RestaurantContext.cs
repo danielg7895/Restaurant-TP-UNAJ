@@ -25,12 +25,12 @@ namespace AccessData
             modelBuilder.Entity<ComandaMercaderia>().HasKey(e => e.Id);
 
             // Mercaderia
-            modelBuilder.Entity<Mercaderia>().Property(e => e.Name).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<Mercaderia>().Property(e => e.Nombre).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Mercaderia>().Property(e => e.TipoMercaderiaId).IsRequired();
-            modelBuilder.Entity<Mercaderia>().Property(e => e.Price).IsRequired();
-            modelBuilder.Entity<Mercaderia>().Property(e => e.Ingredients).IsRequired().HasMaxLength(255);
-            modelBuilder.Entity<Mercaderia>().Property(e => e.Preparation).IsRequired().HasMaxLength(255);
-            modelBuilder.Entity<Mercaderia>().Property(e => e.Image).IsRequired().HasMaxLength(255);
+            modelBuilder.Entity<Mercaderia>().Property(e => e.Precio).IsRequired();
+            modelBuilder.Entity<Mercaderia>().Property(e => e.Ingredientes).IsRequired().HasMaxLength(255);
+            modelBuilder.Entity<Mercaderia>().Property(e => e.Preparacion).IsRequired().HasMaxLength(255);
+            modelBuilder.Entity<Mercaderia>().Property(e => e.Imagen).IsRequired().HasMaxLength(255);
 
             // TipoMercaderia
             modelBuilder.Entity<TipoMercaderia>().Property(e => e.Description).IsRequired().HasMaxLength(50);

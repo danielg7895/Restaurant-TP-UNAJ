@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities
+﻿using FluentValidation;
+
+namespace Domain.DTOs
 {
-    public class Mercaderia
+    public class GetMercaderiaDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
@@ -9,7 +11,6 @@
         public string Ingredientes { get; set; }
         public string Preparacion { get; set; }
         public string Imagen { get; set; }
-        public TipoMercaderia TipoMercaderia { get; set; }
-
     }
+
 }

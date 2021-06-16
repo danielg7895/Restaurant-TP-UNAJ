@@ -1,6 +1,6 @@
 
 const Render = async (screen) => {
-    var divMain = document.getElementById("main")
+    var divMain = document.getElementById("app")
     divMain.insertAdjacentHTML('beforeend', await screen)
 }
 

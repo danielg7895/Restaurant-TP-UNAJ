@@ -20,7 +20,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ComandaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GetComandaDTO), StatusCodes.Status201Created)]
         public IActionResult AddComanda([FromBody]AddComandaDTO comanda)
         {
             try
@@ -30,7 +30,7 @@ namespace Restaurante.Api.Controllers
             catch (InvalidIdentifier e)
             {
                 string jsonString = $"{{ \"Error\": \"{e.Message}\" }}";
-                Response.StatusCode = 404;
+                Response.StatusCode = 400;
                 return Content(jsonString, "application/json");
             }
             catch (Exception e)
@@ -40,21 +40,28 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ComandaResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetComandaDTO), StatusCodes.Status200OK)]
         public IActionResult GetComanda(string id)
         {
             try
             {
                 return new JsonResult(_service.GetComanda(id)) { StatusCode = 200 };
-            } catch (Exception e)
+            }
+            catch (InvalidGUID e)
+            {
+                string jsonString = $"{{ \"Error\": \"{e.Message}\" }}";
+                Response.StatusCode = 400;
+                return Content(jsonString, "application/json");
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Comanda), StatusCodes.Status200OK)]
-        public IActionResult GetComandaByDate([FromQuery]string fecha)
+        [ProducesResponseType(typeof(GetComandaDTO), StatusCodes.Status200OK)]
+        public IActionResult GetComandaByDate([FromQuery]string fecha = "")
         {
             try
             {
@@ -63,7 +70,7 @@ namespace Restaurante.Api.Controllers
             catch (InvalidDate e)
             {
                 string jsonString = $"{{ \"Error\": \"{e.Message}\" }}";
-                Response.StatusCode = 404;
+                Response.StatusCode = 400;
                 return Content(jsonString, "application/json");
             }
             catch (Exception e)

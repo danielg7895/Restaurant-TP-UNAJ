@@ -6,11 +6,11 @@ namespace Domain.Interfaces
 {
     public interface IComandaService
     {
-        public ComandaResponseDTO AddComanda(AddComandaDTO comanda);
-        public ComandaResponseDTO GetComanda(string comandaGuidStr);
-        public ComandaResponseDTO GetComandaByDate(string date);
-        public List<Comanda> GetComandaByDateList(string strDate);
-        public Comanda GetComandaByFilter<T>(T filter, string key);
-        public List<Comanda> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
+        public GetComandaDTO AddComanda(AddComandaDTO comanda);
+        public GetComandaDTO GetComanda(string comandaGuidStr);
+        public GetComandaDTO GetComandaByDate(string date);
+        public List<GetComandaDTO> GetComandaByDateList(string strDate);
+        public GetComandaDTO GetComandaByFilter<T>(T filter, string key);
+        public List<GetComandaDTO> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
     }
 }

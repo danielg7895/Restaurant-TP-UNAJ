@@ -21,17 +21,16 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GetMercaderiaDTO), StatusCodes.Status201Created)]
         public IActionResult AddMercaderia([FromBody]AddMercaderiaDTO mercaderiaDTO)
         {
-            bool isValid = ModelState.IsValid;
             try
             {
                 return new JsonResult(_service.AddMercaderia(mercaderiaDTO)) { StatusCode = 201};
             }
             catch (InvalidIdentifier e)
             {
-                Response.StatusCode = 404;
+                Response.StatusCode = 400;
                 string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
                 return Content(jsonString, "application/json");
             }
@@ -42,7 +41,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetMercaderiaDTO), StatusCodes.Status200OK)]
         public IActionResult GetMercaderia(int id)
         {
             try
@@ -51,7 +50,7 @@ namespace Restaurante.Api.Controllers
             } 
             catch (InvalidIdentifier e)
             {
-                Response.StatusCode = 404;
+                Response.StatusCode = 400;
                 string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
                 return Content(jsonString, "application/json");
             }
@@ -62,12 +61,14 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
-        public IActionResult GetMercaderiasByTipos([FromQuery]List<int> tiposId)
+        [ProducesResponseType(typeof(GetMercaderiaDTO), StatusCodes.Status200OK)]
+        public IActionResult GetMercaderiasByTipos([FromQuery]List<int> tipo)
         {
             try
             {
-                return new JsonResult(_service.GetMercaderiasByTipos(tiposId));
+                if (tipo.Count == 0) return new JsonResult(_service.GetMercaderias());
+
+                return new JsonResult(_service.GetMercaderiasByTipos(tipo));
             }
             catch (Exception e)
             {
@@ -75,13 +76,19 @@ namespace Restaurante.Api.Controllers
             }
         }
 
-        [HttpPut]
-        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
-        public IActionResult UpdateMercaderia([FromBody]UpdateMercaderiaDTO mercaderiaDTO)
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(GetMercaderiaDTO), StatusCodes.Status201Created)]
+        public IActionResult UpdateMercaderia(int id, [FromBody]AddMercaderiaDTO mercaderiaDTO)
         {
             try
             {
-                return new JsonResult(_service.UpdateMercaderia(mercaderiaDTO));
+                return new JsonResult(_service.UpdateMercaderia(id, mercaderiaDTO));
+            }
+            catch (InvalidIdentifier e)
+            {
+                Response.StatusCode = 400;
+                string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
+                return Content(jsonString, "application/json");
             }
             catch (Exception e)
             {
@@ -90,7 +97,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(Mercaderia), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetMercaderiaDTO), StatusCodes.Status200OK)]
         public IActionResult DeleteMercaderia(int id)
         {
             try
@@ -101,7 +108,7 @@ namespace Restaurante.Api.Controllers
             } 
             catch (InvalidIdentifier e)
             {
-                Response.StatusCode = 404;
+                Response.StatusCode = 400;
                 string jsonString = $"{{\"Error\": \"{e.Message}\"}}";
                 return Content(jsonString, "application/json");
             }

@@ -104,28 +104,28 @@ namespace AccessData.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Image")
+                    b.Property<string>("Imagen")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Ingredients")
+                    b.Property<string>("Ingredientes")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Preparation")
+                    b.Property<int>("Precio")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Preparacion")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
 
                     b.Property<int>("TipoMercaderiaId")
                         .HasColumnType("int");
