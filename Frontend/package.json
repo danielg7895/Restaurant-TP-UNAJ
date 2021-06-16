@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "Proyecto Software - Restaurante Frontend",
-  "main": "src/index.js",
+  "main": "src/screens/index.js",
   "proxy": "http://127.0.0.1:45148",
   "scripts": {
     "start": "node server.js",
