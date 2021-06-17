@@ -130,5 +130,10 @@ namespace Application.Services
             };
             return responseMercaderia;
         }
+
+        public List<GetTipoMercaderiaDTO> GetTiposMercaderia()
+        {
+            return _query.GetTiposMercaderia();
+        }
     }
 }

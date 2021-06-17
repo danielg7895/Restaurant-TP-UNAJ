@@ -5,7 +5,6 @@ let appDiv = document.getElementById("app")
 
 window.onload = async () => {
     let mercaderias = await getMercaderias()
-    // falta validacion
 
     mercaderias.forEach((mercaderia) => {
         tableBodyDiv.insertAdjacentHTML("beforeend", MercaderiaTable(mercaderia))
@@ -13,6 +12,9 @@ window.onload = async () => {
             EliminarMercaderia(mercaderia.id)
         }
     })
+}
+
+const ShowConfirmation = () => {
 }
 
 const EliminarMercaderia = async (id) => {

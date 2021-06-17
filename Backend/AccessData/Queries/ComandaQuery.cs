@@ -17,6 +17,7 @@ namespace AccessData.Queries
         public List<GetComandaDTO> GetComandaByDateList(DateTime date);
         public GetComandaDTO GetComandaByFilter<T>(T filter, string key);
         public List<GetComandaDTO> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
+        public List<GetFormaEntregaDTO> GetFormasEntrega();
     }
 
     public class ComandaQuery : IComandaQuery
@@ -115,5 +116,10 @@ namespace AccessData.Queries
             return comandas;
         }
 
+        public List<GetFormaEntregaDTO> GetFormasEntrega()
+        {
+            List<GetFormaEntregaDTO> formasEntrega = _db.Query("FormaEntregas").Get<GetFormaEntregaDTO>().ToList();
+            return formasEntrega;
+        }
     }
 }

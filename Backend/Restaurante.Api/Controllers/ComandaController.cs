@@ -5,6 +5,7 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace Restaurante.Api.Controllers
 {
@@ -72,6 +73,20 @@ namespace Restaurante.Api.Controllers
                 string jsonString = $"{{ \"Error\": \"{e.Message}\" }}";
                 Response.StatusCode = 400;
                 return Content(jsonString, "application/json");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("formaEntrega")]
+        [ProducesResponseType(typeof(List<GetFormaEntregaDTO>), StatusCodes.Status200OK)]
+        public IActionResult GetFormasEntrega()
+        {
+            try
+            {
+                return new JsonResult(_service.GetFormasEntrega()) { StatusCode = 200 };
             }
             catch (Exception e)
             {

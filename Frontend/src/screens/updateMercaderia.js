@@ -13,8 +13,6 @@ window.onload = async () => {
         e.preventDefault()
         ActualizarMercaderia()
     }
-
-    console.log(mercaderia)
 }
 
 const ActualizarMercaderia = async () => {

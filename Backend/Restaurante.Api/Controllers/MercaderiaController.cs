@@ -118,5 +118,20 @@ namespace Restaurante.Api.Controllers
             }
         }
 
+
+        [HttpGet("tipoMercaderia")]
+        [ProducesResponseType(typeof(List<GetTipoMercaderiaDTO>), StatusCodes.Status200OK)]
+        public IActionResult GetTiposMercaderia()
+        {
+            try
+            {
+                return new JsonResult(_service.GetTiposMercaderia()) { StatusCode = 200 };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }

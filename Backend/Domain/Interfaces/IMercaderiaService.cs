@@ -9,6 +9,7 @@ namespace Domain.Interfaces
         public GetMercaderiaDTO AddMercaderia(AddMercaderiaDTO mercaderiaDTO);
         public GetMercaderiaDTO GetMercaderia(int id);
         public List<GetMercaderiaDTO> GetMercaderias();
+        public List<GetTipoMercaderiaDTO> GetTiposMercaderia();
         public GetMercaderiaDTO GetMercaderiaByFilter<T>(T filter, string key);
         public List<GetMercaderiaDTO> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key);
         public List<GetMercaderiaDTO> GetMercaderiasByTipos(List<int> tiposId);

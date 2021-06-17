@@ -1,4 +1,5 @@
 import { getMercaderias } from "../actions/mercaderiaActions.js"
+import {LoadComandas} from './comandas.js'
 
 let mercaderiasDiv = document.getElementById("mercaderia-list")
 let loaderDiv = document.getElementById("loader")
@@ -6,12 +7,11 @@ let loaderDiv = document.getElementById("loader")
 window.onload = async () => {
     var mercaderiasJson = await getMercaderias()
     loaderDiv.remove()
+    LoadComandas()
 
     if (mercaderiasJson === null) {
         mercaderiasDiv.insertAdjacentHTML('beforeend', '<div class="alert alert-danger">Error al obtener las mercaderias de la base de datos</div>')
     }
-
-    console.log(mercaderiasJson)
 
     mercaderiasJson.forEach((mercaderiaJson) => {
         mercaderiasDiv.insertAdjacentHTML('beforeend', MercaderiaCard(mercaderiaJson))
@@ -42,7 +42,7 @@ const MercaderiaCard = (data) => {
 
                 <div class="card-footer d-flex justify-content-between">
                     <h4 >$${data.precio}</h4>
-                    <a href="#" class="btn btn-primary ms-auto" id="btn-${data.id}">Agregar a comanda</a>
+                    <a style="cursor:pointer;" class="btn btn-primary ms-auto" id="btn-${data.id}">Agregar a comanda</a>
                 </div>
             </div>
         </div>

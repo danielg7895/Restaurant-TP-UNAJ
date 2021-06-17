@@ -24,14 +24,54 @@
                 </div>
                 <div class="actions">
                     <a class="btn btn-outline-warning mx-4" href="/Administracion">Administracion</a>
-                    <a  href="/comandas"><i class="bi bi-bag text-white h4"></i></a>
+                    
+                    <!-- OffCanvas -->
+                    <i class="bi bi-bag text-white h4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
+                    <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                        <div class="offcanvas-header">
+                            <h5 id="offcanvasRightLabel">Lista de mercaderias en comanda</h5>
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div class="container" id="comandaDetail">
+                                <div class="row">
+                                    <div class="col bg-white pb-3" id="comandas-list"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex justify-content-between mb-2">
+                    
+                                            <div class="d-flex">
+                                                <p class="h5 me-2">Total: </p>
+                                                <div id="totalPrice">$ 0</div>
+                                            </div>
+                                            
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="formaEntregaDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Forma de Entrega
+                                                </button>
+                                                <ul class="dropdown-menu" id="formaEntregaDropdownMenu" aria-labelledby="formaEntregaDropdownBtn">
+                                                 
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <a style="cursor:pointer;" id="enviarComanda-btn" class="btn btn-primary">Enviar comanda</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
           </nav>
 
         <div class="container" id="main">
 
-            <div id="mercaderiaModal" class="modal fade " tabindex="-1" aria-hidden="true">
+            <div id="mercaderiaModal" class="modal fade" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -41,18 +81,17 @@
                       <div class="modal-body" id="modalBody">
                         
                       </div>
-                      <div class="modal-footer" id="modalFooter">
+                        <div class="modal-footer" id="modalFooter"></div>
                       </div>
                     </div>
                   </div>
-            </div>
-
-
+                
+                
             <div id="mercaderia-list" class="row row-cols-1 row-cols-md-4 g-6 pr-2 ">
                 <div class="spinner-border text-dark" id="loader" role="status"></div>
+                </div>
             </div>
         </div>
-    
 
         <div class="footer">
             <footer class="container-inline">

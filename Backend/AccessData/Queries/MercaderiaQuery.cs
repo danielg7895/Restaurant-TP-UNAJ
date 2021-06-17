@@ -12,6 +12,7 @@ namespace AccessData.Queries
     {
         public GetMercaderiaDTO GetMercaderia(int id);
         public List<GetMercaderiaDTO> GetMercaderias();
+        public List<GetTipoMercaderiaDTO> GetTiposMercaderia();
         public GetMercaderiaDTO GetFirstMercaderiaByFilter<T>(T filter, string key);
         public List<GetMercaderiaDTO> GetMercaderiasByFilter<T>(T filter, string key);
         public List<GetMercaderiaDTO> GetMercaderiaByFilterList<T>(List<T> filterTypeList, string key);
@@ -85,6 +86,13 @@ namespace AccessData.Queries
             List<GetMercaderiaDTO> mercaderias = _db.Query("Mercaderias").Where(key, filter).Get<GetMercaderiaDTO>().ToList();
 
             return mercaderias;
+        }
+
+        public List<GetTipoMercaderiaDTO> GetTiposMercaderia()
+        {
+            List<GetTipoMercaderiaDTO> tiposMercaderia = _db.Query("TipoMercaderias").Get<GetTipoMercaderiaDTO>().ToList();
+            
+            return tiposMercaderia;
         }
     }
 }

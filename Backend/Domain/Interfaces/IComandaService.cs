@@ -12,5 +12,6 @@ namespace Domain.Interfaces
         public List<GetComandaDTO> GetComandaByDateList(string strDate);
         public GetComandaDTO GetComandaByFilter<T>(T filter, string key);
         public List<GetComandaDTO> GetComandaByFilterList<T>(List<T> filterTypeList, string key);
+        public List<GetFormaEntregaDTO> GetFormasEntrega();
     }
 }

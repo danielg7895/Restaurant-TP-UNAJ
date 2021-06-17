@@ -151,5 +151,9 @@ namespace Application.Services
             return _query.GetComandaByFilterList(filterTypeList, key);
         }
 
+        public List<GetFormaEntregaDTO> GetFormasEntrega()
+        {
+            return _query.GetFormasEntrega();
+        }
     }
 }
