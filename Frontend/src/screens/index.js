@@ -15,30 +15,38 @@ window.onload = async () => {
 
     mercaderiasJson.forEach((mercaderiaJson) => {
         mercaderiasDiv.insertAdjacentHTML('beforeend', MercaderiaCard(mercaderiaJson))
+
         let btnElem = document.getElementById(`btn-${mercaderiaJson.id}`)
         btnElem.onclick = () => {
             AddToComandas(mercaderiaJson)
         }
+
+        SetupModal(mercaderiaJson)
     })
 }
 
 const MercaderiaCard = (data) => {
     return (
         /*html*/`
-        <div class="col">
+        <div class="col p-2">
             <div class="card h-100">
-                <img class="card-img-top" style="width: 100%; height: 15vw; object-fit: cover;" src=${data.imagen} alt="Card imagen">
+                <a class="modal-toggle-${data.id}" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#mercaderiaModal">
+                    <img class="card-img-top" style="width: 100%; height: 15vw; object-fit: cover;" src=${data.imagen} alt="Card imagen">
+                </a>
                 <div class="card-body">
-                    <h5 class="card-title">${data.nombre}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">${data.ingredientes}</h6>
-                    <p class="card-text">${data.preparacion}</p>
+                    <a class="modal-toggle-${data.id} text-decoration-none text-dark" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#mercaderiaModal">
+                        <h5 class="card-title">${data.nombre}</h5>
+                    </a>
+                    <p class="card-subtitle mb-2 text-muted">${data.ingredientes}</p>
                 </div>
 
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary" id="btn-${data.id}">Agregar a comanda</a>
+                <div class="card-footer d-flex justify-content-between">
+                    <h4 >$${data.precio}</h4>
+                    <a href="#" class="btn btn-primary ms-auto" id="btn-${data.id}">Agregar a comanda</a>
                 </div>
             </div>
         </div>
+
         `
     )
 }
@@ -67,4 +75,34 @@ const AddToComandas = (mercaderiaJson) => {
     else {
         localStorage.setItem("comandas", JSON.stringify([mercaderiaJson]))
     }
+}
+
+const SetupModal = (mercaderiaJson) => {
+    let modalsTriggerElem = document.getElementsByClassName(`modal-toggle-${mercaderiaJson.id}`)
+
+    Array.from(modalsTriggerElem).forEach((a) => {
+        a.onclick = () => {
+            document.getElementById("modalTitle").innerHTML = mercaderiaJson.nombre
+            
+            document.getElementById("modalBody").innerHTML = /*html*/`
+                <div class="col">
+                    <img style="width: 100%; height: 15vw; object-fit: cover;" src=${mercaderiaJson.imagen}>
+                    <h6 class="card-subtitle mb-2 text-muted mt-2">Ingredientes: ${mercaderiaJson.ingredientes}</h6>
+                    <p class="card-text mt-4">Preparacion: ${mercaderiaJson.preparacion}</p>
+                </div>
+            `
+
+            document.getElementById("modalFooter").innerHTML = `
+                <h4 class="me-auto">Precio: $${mercaderiaJson.precio}</h4>
+                <a class="btn btn-primary" id="modal-btn-${mercaderiaJson.id}">Agregar a comanda</a>
+            `
+
+            document.getElementById(`modal-btn-${mercaderiaJson.id}`).onclick = () => {
+                AddToComandas(mercaderiaJson)
+            }
+        }
+    })
+
+
+
 }

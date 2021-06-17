@@ -20,9 +20,16 @@ app.get('/administracion', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/administracion.html'))
 })
 
+app.get('/administracion/mercaderia/add', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/addMercaderia.html'))
+})
+
+app.get('/administracion/mercaderia/edit/:id', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/updateMercaderia.html'))
+})
 
 app.use('/', router)
 
 app.listen(port, () => {
-    console.log("Server corriendo en puerto 5000")
+    console.log("Server corriendo en http://localhost:5000")
 })
