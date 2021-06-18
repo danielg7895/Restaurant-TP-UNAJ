@@ -1,38 +1,77 @@
 import {getFormasEntrega} from '../actions/formaEntregaActions.js'
 import {addComanda} from '../actions/comandaActions.js'
 
+var comandaAlertDiv = document.getElementById("comandaAlert")
 var comandasListDiv = document.getElementById("comandas-list")
+var totalPricediv = document.getElementById("totalPrice")
+var enviarComandaBtn = document.getElementById("enviarComanda-btn")
+var formaEntregaDropdownMenu = document.getElementById("formaEntregaDropdownMenu")
+var formaEntregaDropdownBtn = document.getElementById("formaEntregaDropdownBtn")
 
 export const LoadComandas = async () => {
     ConfigureFormasEntrega()
-    var enviarComandaBtn = document.getElementById("enviarComanda-btn")
+
     enviarComandaBtn.onclick = () => { EnviarComanda() }
 
-    var totalPricediv = document.getElementById("totalPrice")
-
-    if (localStorage.length === 0) {
-        comandasListDiv.innerHTML = `<div class="alert alert-info" role="alert">No hay mercaderias agregadas a la comanda. <a href="/">Ver mercaderias</a></div>`
+    if (localStorage.comandas === undefined) {
+        comandaAlertDiv.innerHTML = `<div class="alert alert-info" role="alert" id="comandaAlert">No hay mercaderias agregadas a la comanda. <a href="/">Ver mercaderias</a></div>`
         return
     }
 
-    var comandas = JSON.parse(localStorage.comandas)
-    var totalPrice = 0
+    var mercaderias = JSON.parse(localStorage.comandas)
 
-    comandas.forEach((comanda) => {
-        totalPrice += comanda.precio
-        var comandaHtml = ComandaRow(comanda)
-        comandasListDiv.insertAdjacentHTML('beforeend', comandaHtml)
-
-        var deleteDiv = document.getElementById(`p-${comanda.id}`)
-        deleteDiv.onclick = () => {
-            RemoveFromComandas(comanda.id)
-        }
+    mercaderias.forEach((mercaderia) => {
+       AddToComandas(mercaderia)
     })
-
-    totalPricediv.innerHTML = `$ ${totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
 
 }
 
+export const AddToComandas = (mercaderia) => {
+    comandaAlertDiv.innerHTML = ""
+    
+    // updating total price
+    var currentPrice = parseFloat(totalPricediv.innerHTML.split("$").pop().trim().replace('.', ''))
+    currentPrice += parseFloat(mercaderia.precio)
+    totalPricediv.innerHTML = `$ ${currentPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+
+    var comandaHtml = ComandaRow(mercaderia)
+    comandasListDiv.insertAdjacentHTML('beforeend', comandaHtml)
+
+    var deleteDiv = document.getElementById(`p-${mercaderia.id}`)
+    deleteDiv.onclick = () => {
+        RemoveFromComandas(mercaderia)
+    }
+
+    ToggleButton()
+}
+
+const RemoveFromComandas = (mercaderia) => {
+
+    if (localStorage.length !== 0) {
+
+        let comandas = JSON.parse(localStorage.comandas)
+
+        comandas.forEach((merc) => {
+            if (merc.id === mercaderia.id) {
+                comandas.splice(comandas.indexOf(merc), 1)
+
+                localStorage.setItem("comandas", JSON.stringify(comandas))
+            }
+        })
+
+        document.getElementById(`comanda-${mercaderia.id}`).remove()
+        
+        if (comandas.length === 0) {
+            localStorage.removeItem("comandas")
+            comandaAlertDiv.innerHTML = `<div class="alert alert-info" role="alert">No hay mercaderias agregadas a la comanda. <a href="/">Ver mercaderias</a></div>`
+            ToggleButton()
+        }
+
+        var currentPrice = parseFloat(totalPricediv.innerHTML.split("$").pop().trim().replace('.', ''))
+        currentPrice -= parseFloat(mercaderia.precio)
+        totalPricediv.innerHTML = `$ ${currentPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+    }
+}
 
 const ComandaRow = (data) => {
     return (
@@ -49,7 +88,7 @@ const ComandaRow = (data) => {
         <div class="col fw-bold d-flex justify-content-center align-self-center">
             $ ${data.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
             <div class="col fw-bold d-flex justify-content-center align-self-center" id="p-${data.id}">
-               <i class="bi bi-x text-danger fw-bold h5" style="cursor: pointer; font-size: 30px"></i>
+               <i class="bi bi-x text-danger fw-bold h3 d-pointer"></i>
             </div>
         </div>
     </div>
@@ -57,54 +96,36 @@ const ComandaRow = (data) => {
     )
 }
 
-const RemoveFromComandas = (mercaderiaId, parentDiv) => {
-
-    if (localStorage.length !== 0) {
-
-        let comandas = JSON.parse(localStorage.comandas)
-
-        comandas.forEach((mercaderia) => {
-            if (mercaderia.id === mercaderiaId) {
-                comandas.splice(comandas.indexOf(mercaderia), 1)
-
-                localStorage.setItem("comandas", JSON.stringify(comandas))
-            }
-        })
-
-        if (comandas.length === 0) {
-            localStorage.clear()
-        }
-
-        document.getElementById(`comanda-${mercaderiaId}`).remove()
-
-        location.reload();
+const ToggleButton = () => {
+    if (localStorage.comandas === undefined || localStorage.FormaEntrega === undefined) {
+        enviarComandaBtn.classList.remove('disabled')
+        enviarComandaBtn.classList.add('disabled')
+    } else {
+        enviarComandaBtn.classList.remove('disabled')
     }
 }
 
 const ConfigureFormasEntrega = async () => {
-    var formaEntregaDropdownMenu = document.getElementById("formaEntregaDropdownMenu")
-    var formaEntregaDropdownBtn = document.getElementById("formaEntregaDropdownBtn")
+
     var formasEntrega = await getFormasEntrega()
     
     var currentFormaEntrega = localStorage.getItem("FormaEntrega")
-    document.getElementById("enviarComanda-btn").disabled = true
 
     if (currentFormaEntrega !== null) {
         formaEntregaDropdownBtn.innerHTML = formasEntrega[parseInt(currentFormaEntrega) -1].description
     }
-    else {
-        document.getElementById("enviarComanda-btn").classList.add("disabled")
-    }
 
     formasEntrega.forEach( (formaEntrega) => {
-        formaEntregaDropdownMenu.insertAdjacentHTML("beforeend", `<li><a class="dropdown-item" id="formaEntrega-${formaEntrega.id}" href="#">${formaEntrega.description}</a></li>`)
+        formaEntregaDropdownMenu.insertAdjacentHTML("beforeend", `<li><a class="dropdown-item d-pointer" id="formaEntrega-${formaEntrega.id}">${formaEntrega.description}</a></li>`)
 
         document.getElementById(`formaEntrega-${formaEntrega.id}`).onclick = () => {
             localStorage.setItem("FormaEntrega", formaEntrega.id)
             formaEntregaDropdownBtn.innerHTML = document.getElementById(`formaEntrega-${formaEntrega.id}`).innerHTML
-            document.getElementById("enviarComanda-btn").classList.remove("disabled")
+            ToggleButton()
         }
     })
+    
+    ToggleButton()
 }
 
 const EnviarComanda = async () => {
@@ -114,7 +135,6 @@ const EnviarComanda = async () => {
     var comanda = {
         'formaEntrega': formaEntrega,
         'mercaderia' : [
-
         ]
     }
 
@@ -129,7 +149,6 @@ const EnviarComanda = async () => {
     } else {
         ShowAlert("danger", "Hubo un error al enviar la comanda")
     }
-
 }
 
 const ClearComandas = () => {
@@ -139,7 +158,7 @@ const ClearComandas = () => {
     mercaderias.forEach( (mercaderia) => {
         document.getElementById(`comanda-${mercaderia.id}`).remove()
     })
-    localStorage.clear()
+    localStorage.removeItem("comandas")
     document.getElementById("totalPrice").innerHTML = "$ 0"
 }
 
@@ -148,6 +167,6 @@ const ShowAlert = (type, message) => {
     var alertMessageDiv = document.getElementById("alertMessage")
     setInterval(() => {
         alertMessageDiv.remove()
-        comandasListDiv.innerHTML = `<div class="alert alert-info" role="alert">No hay mercaderias agregadas a la comanda. <a href="/">Ver mercaderias</a></div>`
+        comandaAlertDiv.innerHTML = `<div class="alert alert-info" role="alert">No hay mercaderias agregadas a la comanda. <a href="/">Ver mercaderias</a></div>`
     }, 3000)
 }

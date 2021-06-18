@@ -1,5 +1,5 @@
 import { getMercaderias } from "../actions/mercaderiaActions.js"
-import {LoadComandas} from './comandas.js'
+import { LoadComandas, AddToComandas } from './comandas.js'
 
 let mercaderiasDiv = document.getElementById("mercaderia-list")
 let loaderDiv = document.getElementById("loader")
@@ -18,7 +18,8 @@ window.onload = async () => {
 
         let btnElem = document.getElementById(`btn-${mercaderiaJson.id}`)
         btnElem.onclick = () => {
-            AddToComandas(mercaderiaJson)
+            AddMercaderiaToLocalStorage(mercaderiaJson)
+            ShowToast(mercaderiaJson)
         }
 
         SetupModal(mercaderiaJson)
@@ -51,9 +52,9 @@ const MercaderiaCard = (data) => {
     )
 }
 
-const AddToComandas = (mercaderiaJson) => {
+const AddMercaderiaToLocalStorage = (mercaderiaJson) => {
 
-    if (localStorage.length !== 0) {
+    if (localStorage.comandas !== undefined) {
 
         let comandas = JSON.parse(localStorage.comandas)
         var mercaderiaExists = false
@@ -65,15 +66,19 @@ const AddToComandas = (mercaderiaJson) => {
         })
 
         if (!mercaderiaExists) {
-            console.log(comandas)
-            console.log("Adding new comanda...")
-
+            // adding mercaderia to localstorage
             comandas.push(mercaderiaJson)
             localStorage.setItem("comandas", JSON.stringify(comandas))
+
+            // adding mercaderia to offcanvas cart
+            AddToComandas(mercaderiaJson)
         }
     }
     else {
         localStorage.setItem("comandas", JSON.stringify([mercaderiaJson]))
+
+        // adding mercaderia to offcanvas cart
+        AddToComandas(mercaderiaJson)
     }
 }
 
@@ -98,11 +103,19 @@ const SetupModal = (mercaderiaJson) => {
             `
 
             document.getElementById(`modal-btn-${mercaderiaJson.id}`).onclick = () => {
-                AddToComandas(mercaderiaJson)
+                AddMercaderiaToLocalStorage(mercaderiaJson)
             }
         }
     })
+}
 
+const ShowToast = (mercaderiaJson) => {
+    var myAlert = document.getElementById('notificationToast')
+    var bsAlert = new bootstrap.Toast(myAlert)
+    document.getElementById("toastBody").innerHTML = `Se agrego <strong>${mercaderiaJson.nombre}</strong> a la comanda! <a class="d-pointer h6" id="toastComandaLink">Ver comanda</a> `
+    bsAlert.show()
 
-
+    document.getElementById("toastComandaLink").onclick = () => {
+        document.getElementById("comandaIcon").click()
+    }
 }
